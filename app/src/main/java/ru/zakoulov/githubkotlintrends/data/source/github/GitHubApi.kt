@@ -9,7 +9,7 @@ interface GitHubApi {
     suspend fun getTrendRepositories(
         @Query("language") language: String? = null,
         @Query("since") since: String? = null
-    ): Response<GitHubReposList>
+    ): Response<List<GitHubRepo>>
 
     companion object {
         const val BASE_URL = "https://ghapi.huchen.dev/"

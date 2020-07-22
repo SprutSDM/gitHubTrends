@@ -6,9 +6,9 @@ import ru.zakoulov.githubkotlintrends.data.ReposList
 
 class GitHubReposListMapper(
     private val repoMapper: GitHubRepoMapper
-) : Mapper<GitHubReposList, ReposList> {
-    override fun map(input: GitHubReposList): ReposList {
-        return ReposList(input.repos.map { repo ->
+) : Mapper<List<GitHubRepo>, ReposList> {
+    override fun map(input: List<GitHubRepo>): ReposList {
+        return ReposList(input.map { repo ->
             repoMapper.map(repo)
         })
     }

@@ -5,13 +5,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.zakoulov.githubkotlintrends.data.source.RepoDataSource
 
-class RepoRepository(
+class ReposRepository(
     private val repoDataSource: RepoDataSource,
     private val coroutineScope: CoroutineScope
 ) {
     val repos = MutableLiveData<DataResult<ReposList>>()
 
-    fun getTrendRepositories(language: Language, since: Since) {
+    fun fetchTrendRepositories(language: Language, since: Since) {
         if (repos.value?.isLoading() == true) {
             return
         }

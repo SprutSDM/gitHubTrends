@@ -13,6 +13,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -30,7 +34,9 @@ ext {
     lifecycleLiveDataKtxVersion = '2.2.0'
     fragmentKtxVersion = '1.2.4'
 
-    retrofitVersion = '2.5.0'
+    gsonVersion = '2.8.6'
+
+    retrofitVersion = '2.7.2'
     retrofitConverterGsonVersion = '2.5.0'
 }
 
@@ -45,6 +51,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleLiveDataKtxVersion"
+
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitConverterGsonVersion"

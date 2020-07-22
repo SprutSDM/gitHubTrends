@@ -1,9 +1,5 @@
 package ru.zakoulov.githubkotlintrends.data.source.github
 
-data class GitHubReposList(
-    val repos: List<GitHubRepo>
-)
-
 data class GitHubRepo(
     val author: String,
     val name: String,
