@@ -16,12 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.zakoulov.githubkotlintrends.App
 import ru.zakoulov.githubkotlintrends.R
 import ru.zakoulov.githubkotlintrends.data.DataResult
+import ru.zakoulov.githubkotlintrends.data.Repo
 import ru.zakoulov.githubkotlintrends.data.ReposList
 import ru.zakoulov.githubkotlintrends.data.ReposRepository
 import ru.zakoulov.githubkotlintrends.ui.main.MainViewModel
 import ru.zakoulov.githubkotlintrends.ui.main.ViewModelFactory
 
-class ReposFragment : Fragment() {
+class ReposFragment : Fragment(), ReposCallbacks {
     private val viewModel: MainViewModel by activityViewModels {
         ViewModelFactory.getViewModelFactory(
             (requireActivity().application as App).reposRepository
@@ -56,11 +57,19 @@ class ReposFragment : Fragment() {
                 }
             }
         })
+        activity?.setTitle(R.string.app_name)
+    }
+
+    override fun onClick(repo: Repo) {
+        viewModel.openReposViewer(repo)
     }
 
     private fun setupRecycler() {
         recyclerViewManager = LinearLayoutManager(this.context)
-        recyclerViewAdapter = ReposViewAdapter(ReposList(emptyList()))
+        recyclerViewAdapter = ReposViewAdapter(
+            initReposList = ReposList(emptyList()),
+            callbacks = this
+        )
         recyclerView.apply {
             layoutManager = recyclerViewManager
             adapter = recyclerViewAdapter
@@ -101,7 +110,7 @@ class ReposFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "ReposFragment"
+        const val TAG = "ReposFragment"
 
         fun newInstance() = ReposFragment()
     }

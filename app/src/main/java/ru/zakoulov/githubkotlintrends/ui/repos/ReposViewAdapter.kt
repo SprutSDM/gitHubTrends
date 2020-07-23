@@ -11,7 +11,8 @@ import ru.zakoulov.githubkotlintrends.R
 import ru.zakoulov.githubkotlintrends.data.ReposList
 
 class ReposViewAdapter(
-    initReposList: ReposList
+    initReposList: ReposList,
+    private val callbacks: ReposCallbacks
 ) : RecyclerView.Adapter<ReposViewAdapter.RepoViewHolder>() {
 
     var reposList: ReposList = initReposList
@@ -36,9 +37,12 @@ class ReposViewAdapter(
             setAuthorName(repo.author)
             setAuthorIcon(repo.avatar)
         }
+        holder.view.setOnClickListener {
+            callbacks.onClick(repo)
+        }
     }
 
-    class RepoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class RepoViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val authorName: TextView = view.findViewById(R.id.repo_author_name)
         private val authorIcon = (view.findViewById(R.id.repo_author_icon) as ImageView).apply {
             clipToOutline = true
@@ -64,5 +68,9 @@ class ReposViewAdapter(
                 .fit()
                 .into(authorIcon)
         }
+    }
+
+    companion object {
+        private const val TAG = "ReposViewAdapter"
     }
 }

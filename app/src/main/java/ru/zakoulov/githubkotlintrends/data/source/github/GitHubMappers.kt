@@ -21,6 +21,7 @@ class GitHubRepoMapper : Mapper<GitHubRepo, Repo> {
             name = input.name,
             avatar = input.avatar,
             description = input.description,
+            url = input.url,
             currentPeriodStars = input.currentPeriodStars,
             forks = input.forks,
             language = input.language,
