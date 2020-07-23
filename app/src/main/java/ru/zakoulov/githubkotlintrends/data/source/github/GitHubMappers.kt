@@ -26,7 +26,7 @@ class GitHubRepoMapper : Mapper<GitHubRepo, Repo> {
             forks = input.forks,
             language = input.language ?: "",
             languageColor = input.languageColor ?: "",
-            stars = input.starts
+            stars = input.stars
         )
     }
 }
