@@ -77,7 +77,7 @@ class ReposFragment : Fragment() {
         }
         spinnerAdapter = ArrayAdapter(
             this.requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.selected_item_spinner,
             periods
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

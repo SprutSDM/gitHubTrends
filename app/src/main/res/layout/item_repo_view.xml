@@ -28,8 +28,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/repo_title"
+            android:id="@+id/repo_author_name"
             android:layout_marginStart="8dp"
+            android:textColor="@android:color/black"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintTop_toTopOf="@id/repo_author_icon_frame"
@@ -38,7 +39,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/repo_author_name"
+            android:id="@+id/repo_title"
             android:layout_marginStart="8dp"
             android:maxLines="1"
             android:ellipsize="end"
@@ -49,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/repo_description"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:maxLines="2"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/repo_author_icon_frame" />
