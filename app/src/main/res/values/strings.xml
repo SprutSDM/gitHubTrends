@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">GitHub Kotlin Trends</string>
+    <string name="app_name">GitHub Trends</string>
+    <string name="repos_title_formatted">GitHub %1$s Trends</string>
     <string name="daily">Today</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
 
+    <string name="all">All</string>
     <string name="kotlin">Kotlin</string>
     <string name="java">Java</string>
     <string name="python">Python</string>

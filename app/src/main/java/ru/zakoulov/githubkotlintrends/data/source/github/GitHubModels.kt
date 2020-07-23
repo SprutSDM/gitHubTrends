@@ -6,8 +6,8 @@ data class GitHubRepo(
     val avatar: String,
     val description: String,
     val url: String,
-    val language: String,
-    val languageColor: String,
+    val language: String?,
+    val languageColor: String?,
     val starts: Int,
     val forks: Int,
     val currentPeriodStars: Int
