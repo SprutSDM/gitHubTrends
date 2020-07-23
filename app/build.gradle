@@ -33,6 +33,8 @@ android {
 
 ext {
     appcompatVersion = '1.1.0'
+    cardViewVersion = '1.0.0'
+    recyclerViewVersion = '1.1.0'
     coreKtxVersion = '1.3.0'
     constraintlayoutVersion = '1.1.3'
     lifecycleVersion = '2.2.0'
@@ -50,7 +52,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
