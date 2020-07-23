@@ -18,10 +18,15 @@ class ReposRepository(
         repos.value = DataResult.Loading()
 
         coroutineScope.launch {
-            repos.postValue(repoDataSource.getTrendRepositories(
-                language = language.value,
-                since = since.value
-            ))
+            val response: DataResult<ReposList> = try {
+                repoDataSource.getTrendRepositories(
+                    language = language.value,
+                    since = since.value
+                )
+            } catch (error: Throwable) {
+                DataResult.Fail("Error when fetching repos")
+            }
+            repos.postValue(response)
         }
     }
 
