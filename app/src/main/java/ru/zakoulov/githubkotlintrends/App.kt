@@ -2,6 +2,7 @@ package ru.zakoulov.githubkotlintrends
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,7 +33,11 @@ class App : Application() {
         val coroutineContext = job + Dispatchers.IO
         val scope = CoroutineScope(coroutineContext)
 
-        reposRepository = ReposRepository(gitHubDataSource, scope)
+        val sharedPreferencesManager = SharedPreferencesManager(
+            getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        )
+
+        reposRepository = ReposRepository(gitHubDataSource, sharedPreferencesManager, scope)
     }
 
     private fun createGitHubApi(): GitHubApi {
@@ -46,6 +51,7 @@ class App : Application() {
 
     companion object {
         private const val TAG = "App"
+        private const val SHARED_PREFERENCES_NAME = "GitHubTrendsSharedPreferences"
     }
 }
 

@@ -9,16 +9,8 @@ import ru.zakoulov.githubkotlintrends.data.ReposRepository
 class MainViewModel(private val reposRepository: ReposRepository) : ViewModel() {
 
     val repos = reposRepository.repos
-    var selectedLanguage = LANGUAGE_ON_STARTUP
-        set(value) {
-            field = value
-            fetchRepos(language = value, since = selectedSince)
-        }
-    var selectedSince = SINCE_ON_STARTUP
-        set(value) {
-            field = value
-            fetchRepos(language = selectedLanguage, since = field)
-        }
+    val currentSince = reposRepository.currentSince
+    val currentLanguage = reposRepository.currentLanguage
 
     val viewingFragment = MutableLiveData<ViewingFragment>(ViewingFragment.ReposList)
 
@@ -32,7 +24,12 @@ class MainViewModel(private val reposRepository: ReposRepository) : ViewModel() 
     }
 
     init {
-        fetchRepos(language = LANGUAGE_ON_STARTUP, since = SINCE_ON_STARTUP)
+        currentSince.observeForever {
+            fetchRepos(language = currentLanguage.value!!, since = it)
+        }
+        currentLanguage.observeForever {
+            fetchRepos(language = it, since = currentSince.value!!)
+        }
     }
 
     private fun fetchRepos(language: ReposRepository.Language, since: ReposRepository.Since) {

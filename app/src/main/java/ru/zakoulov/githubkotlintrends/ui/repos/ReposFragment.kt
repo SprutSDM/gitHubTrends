@@ -96,7 +96,7 @@ class ReposFragment : Fragment(), ReposCallbacks {
         }
         intervalsSpinner.apply {
             adapter = spinnerAdapter
-            setSelection(viewModel.selectedSince.ordinal)
+            setSelection(viewModel.currentSince.value?.ordinal ?: 0)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -104,7 +104,7 @@ class ReposFragment : Fragment(), ReposCallbacks {
                     position: Int,
                     id: Long
                 ) {
-                    viewModel.selectedSince = ReposRepository.Since.values()[position]
+                    viewModel.currentSince.value = ReposRepository.Since.values()[position]
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) = Unit
