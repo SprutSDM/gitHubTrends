@@ -41,8 +41,8 @@ ext {
     fragmentKtxVersion = '1.2.5'
     databingindVersion = '3.1.4'
 
+    picassoVersion = '2.71828'
     gsonVersion = '2.8.6'
-
     retrofitVersion = '2.7.2'
     retrofitConverterGsonVersion = '2.5.0'
 }
@@ -63,8 +63,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
-
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitConverterGsonVersion"
 

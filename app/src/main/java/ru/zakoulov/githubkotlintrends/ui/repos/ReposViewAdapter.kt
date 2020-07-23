@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ru.zakoulov.githubkotlintrends.R
 import ru.zakoulov.githubkotlintrends.data.ReposList
 
@@ -33,12 +34,15 @@ class ReposViewAdapter(
             setTitle(repo.name)
             setDescription(repo.description)
             setAuthorName(repo.author)
+            setAuthorIcon(repo.avatar)
         }
     }
 
     class RepoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val authorName: TextView = view.findViewById(R.id.repo_author_name)
-        private val authorIcon: ImageView = view.findViewById(R.id.repo_author_icon)
+        private val authorIcon = (view.findViewById(R.id.repo_author_icon) as ImageView).apply {
+            clipToOutline = true
+        }
         private val title: TextView = view.findViewById(R.id.repo_title)
         private val description: TextView = view.findViewById(R.id.repo_description)
 
@@ -55,7 +59,10 @@ class ReposViewAdapter(
         }
 
         fun setAuthorIcon(iconPath: String) {
-            //TODO
+            Picasso.get()
+                .load(iconPath)
+                .fit()
+                .into(authorIcon)
         }
     }
 }
