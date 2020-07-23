@@ -1,6 +1,7 @@
 package ru.zakoulov.githubkotlintrends.ui.repos
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,13 +63,29 @@ class ReposFragment : Fragment(), ReposCallbacks {
                 is DataResult.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
+                is DataResult.Fail -> {
+                    progressBar.visibility = View.GONE
+                    Log.d(TAG, reposDataResult.message)
+                }
+            }
+            viewModel.currentLanguage.value?.let {
+                setTitle(it)
             }
         })
-        activity?.setTitle(R.string.app_name)
+        viewModel.currentLanguage.value?.let {
+            setTitle(it)
+        }
     }
 
     override fun onClick(repo: Repo) {
         viewModel.openReposViewer(repo)
+    }
+
+    private fun setTitle(language: ReposRepository.Language) {
+        activity?.title = getString(
+            R.string.repos_title_formatted,
+            getStringResource(language.value)
+        )
     }
 
     private fun setupRecycler() {
@@ -85,19 +102,9 @@ class ReposFragment : Fragment(), ReposCallbacks {
 
     private fun setupSinceSpinner() {
         val periods = ReposRepository.Since.values().map {
-            getString(resources.getIdentifier(
-                it.value,
-                "string",
-                requireContext().packageName
-            ))
+            getStringResource(it.value)
         }
-        intervalSpinnerAdapter = ArrayAdapter(
-            this.requireContext(),
-            R.layout.selected_item_spinner,
-            periods
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+        intervalSpinnerAdapter = createArrayAdapter(periods)
         intervalSpinner.apply {
             adapter = intervalSpinnerAdapter
             setSelection(viewModel.currentSince.value?.ordinal ?: 0)
@@ -118,19 +125,9 @@ class ReposFragment : Fragment(), ReposCallbacks {
 
     private fun setupLanguageSpinner() {
         val languages = ReposRepository.Language.values().map {
-            getString(resources.getIdentifier(
-                it.value,
-                "string",
-                requireContext().packageName
-            ))
+            getStringResource(it.value)
         }
-        languageSpinnerAdapter = ArrayAdapter(
-            this.requireContext(),
-            R.layout.selected_item_spinner,
-            languages
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+        languageSpinnerAdapter = createArrayAdapter(languages)
         languageSpinner.apply {
             adapter = languageSpinnerAdapter
             setSelection(viewModel.currentLanguage.value?.ordinal ?: 0)
@@ -147,6 +144,24 @@ class ReposFragment : Fragment(), ReposCallbacks {
                 override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             }
         }
+    }
+
+    private fun createArrayAdapter(list: List<String>): ArrayAdapter<String> {
+        return ArrayAdapter(
+            this.requireContext(),
+            R.layout.selected_item_spinner,
+            list
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+    }
+
+    private fun getStringResource(value: String): String {
+        return getString(resources.getIdentifier(
+            value,
+            "string",
+            requireContext().packageName
+        ))
     }
 
     companion object {
