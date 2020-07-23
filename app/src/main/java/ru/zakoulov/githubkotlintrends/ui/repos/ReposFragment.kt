@@ -1,6 +1,7 @@
 package ru.zakoulov.githubkotlintrends.ui.repos
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,10 @@ class ReposFragment : Fragment(), ReposCallbacks {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewManager: LinearLayoutManager
     private lateinit var recyclerViewAdapter: ReposViewAdapter
-    private lateinit var intervalsSpinner: Spinner
-    private lateinit var spinnerAdapter: SpinnerAdapter
+    private lateinit var intervalSpinner: Spinner
+    private lateinit var intervalSpinnerAdapter: SpinnerAdapter
+    private lateinit var languageSpinner: Spinner
+    private lateinit var languageSpinnerAdapter: SpinnerAdapter
     private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
@@ -39,7 +42,8 @@ class ReposFragment : Fragment(), ReposCallbacks {
     ): View {
         return inflater.inflate(R.layout.repos_fragment, container, false).apply {
             recyclerView = findViewById(R.id.recycler_view)
-            intervalsSpinner = findViewById(R.id.intervals_spinner)
+            intervalSpinner = findViewById(R.id.interval_spinner)
+            languageSpinner = findViewById(R.id.language_spinner)
             progressBar = findViewById(R.id.progress_bar)
         }
     }
@@ -47,7 +51,8 @@ class ReposFragment : Fragment(), ReposCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecycler()
-        setupSpinner()
+        setupSinceSpinner()
+        setupLanguageSpinner()
 
         viewModel.repos.observe(viewLifecycleOwner, Observer { reposDataResult ->
             when (reposDataResult) {
@@ -58,13 +63,29 @@ class ReposFragment : Fragment(), ReposCallbacks {
                 is DataResult.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
+                is DataResult.Fail -> {
+                    progressBar.visibility = View.GONE
+                    Log.d(TAG, reposDataResult.message)
+                }
+            }
+            viewModel.currentLanguage.value?.let {
+                setTitle(it)
             }
         })
-        activity?.setTitle(R.string.app_name)
+        viewModel.currentLanguage.value?.let {
+            setTitle(it)
+        }
     }
 
     override fun onClick(repo: Repo) {
         viewModel.openReposViewer(repo)
+    }
+
+    private fun setTitle(language: ReposRepository.Language) {
+        activity?.title = getString(
+            R.string.repos_title_formatted,
+            getStringResource(language.value)
+        )
     }
 
     private fun setupRecycler() {
@@ -79,23 +100,13 @@ class ReposFragment : Fragment(), ReposCallbacks {
         }
     }
 
-    private fun setupSpinner() {
+    private fun setupSinceSpinner() {
         val periods = ReposRepository.Since.values().map {
-            getString(resources.getIdentifier(
-                it.value,
-                "string",
-                requireContext().packageName
-            ))
+            getStringResource(it.value)
         }
-        spinnerAdapter = ArrayAdapter(
-            this.requireContext(),
-            R.layout.selected_item_spinner,
-            periods
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-        intervalsSpinner.apply {
-            adapter = spinnerAdapter
+        intervalSpinnerAdapter = createArrayAdapter(periods)
+        intervalSpinner.apply {
+            adapter = intervalSpinnerAdapter
             setSelection(viewModel.currentSince.value?.ordinal ?: 0)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -110,6 +121,47 @@ class ReposFragment : Fragment(), ReposCallbacks {
                 override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             }
         }
+    }
+
+    private fun setupLanguageSpinner() {
+        val languages = ReposRepository.Language.values().map {
+            getStringResource(it.value)
+        }
+        languageSpinnerAdapter = createArrayAdapter(languages)
+        languageSpinner.apply {
+            adapter = languageSpinnerAdapter
+            setSelection(viewModel.currentLanguage.value?.ordinal ?: 0)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.currentLanguage.value = ReposRepository.Language.values()[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            }
+        }
+    }
+
+    private fun createArrayAdapter(list: List<String>): ArrayAdapter<String> {
+        return ArrayAdapter(
+            this.requireContext(),
+            R.layout.selected_item_spinner,
+            list
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+    }
+
+    private fun getStringResource(value: String): String {
+        return getString(resources.getIdentifier(
+            value,
+            "string",
+            requireContext().packageName
+        ))
     }
 
     companion object {

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.zakoulov.githubkotlintrends.R
 import ru.zakoulov.githubkotlintrends.data.ReposList
+import ru.zakoulov.githubkotlintrends.formatToShort
 
 class ReposViewAdapter(
     initReposList: ReposList,
@@ -36,6 +37,8 @@ class ReposViewAdapter(
             setDescription(repo.description)
             setAuthorName(repo.author)
             setAuthorIcon(repo.avatar)
+            setStars(repo.stars)
+            setForks(repo.forks)
         }
         holder.view.setOnClickListener {
             callbacks.onClick(repo)
@@ -49,6 +52,8 @@ class ReposViewAdapter(
         }
         private val title: TextView = view.findViewById(R.id.repo_title)
         private val description: TextView = view.findViewById(R.id.repo_description)
+        private val stars: TextView = view.findViewById(R.id.repo_stars)
+        private val forks: TextView = view.findViewById(R.id.repo_forks)
 
         fun setTitle(title: String) {
             this.title.text = title
@@ -60,6 +65,14 @@ class ReposViewAdapter(
 
         fun setAuthorName(name: String) {
             this.authorName.text = name
+        }
+
+        fun setStars(stars: Int) {
+            this.stars.text = stars.formatToShort()
+        }
+
+        fun setForks(forks: Int) {
+            this.forks.text = forks.formatToShort()
         }
 
         fun setAuthorIcon(iconPath: String) {

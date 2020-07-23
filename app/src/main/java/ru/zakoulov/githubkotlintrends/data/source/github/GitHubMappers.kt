@@ -24,9 +24,9 @@ class GitHubRepoMapper : Mapper<GitHubRepo, Repo> {
             url = input.url,
             currentPeriodStars = input.currentPeriodStars,
             forks = input.forks,
-            language = input.language,
-            languageColor = input.languageColor,
-            stars = input.starts
+            language = input.language ?: "",
+            languageColor = input.languageColor ?: "",
+            stars = input.stars
         )
     }
 }

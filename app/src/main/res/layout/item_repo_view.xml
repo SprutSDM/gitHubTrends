@@ -49,6 +49,44 @@
             app:layout_constraintBottom_toBottomOf="@id/repo_author_icon_frame"
             app:layout_constraintStart_toEndOf="@id/repo_author_icon_frame"/>
 
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:id="@+id/repo_star_icon"
+            android:src="@drawable/star_outline_18"
+            android:layout_marginEnd="4dp"
+            android:tint="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@id/repo_stars"
+            app:layout_constraintTop_toTopOf="@id/repo_stars"
+            app:layout_constraintBottom_toBottomOf="@id/repo_stars"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/repo_stars"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/repo_author_icon_frame"/>
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:id="@+id/repo_forks_icon"
+            android:src="@drawable/fork_icon_32"
+            android:layout_marginEnd="4dp"
+            android:tint="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@id/repo_forks"
+            app:layout_constraintTop_toTopOf="@id/repo_forks"
+            app:layout_constraintBottom_toBottomOf="@id/repo_forks"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/repo_forks"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/repo_title"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

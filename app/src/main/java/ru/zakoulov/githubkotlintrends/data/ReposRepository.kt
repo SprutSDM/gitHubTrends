@@ -34,11 +34,11 @@ class ReposRepository(
         coroutineScope.launch {
             val response: DataResult<ReposList> = try {
                 repoDataSource.getTrendRepositories(
-                    language = language.value,
+                    language = if (language == Language.ALL) null else language.value,
                     since = since.value
                 )
             } catch (error: Throwable) {
-                DataResult.Fail("Error when fetching repos")
+                DataResult.Fail("Error when fetching repos: ${error.message}")
             }
             repos.postValue(response)
         }
@@ -51,6 +51,14 @@ class ReposRepository(
     }
 
     enum class Language(val value: String) {
-        KOTLIN("kotlin")
+        ALL("all"),
+        KOTLIN("kotlin"),
+        JAVA("java"),
+        PYTHON("python"),
+        JAVASCRIPT("javascript"),
+        PHP("php"),
+        SCALA("scala"),
+        DART("dart"),
+        VUE("vue")
     }
 }
