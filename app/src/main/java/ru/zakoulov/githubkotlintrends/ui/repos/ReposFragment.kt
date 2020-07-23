@@ -1,11 +1,14 @@
 package ru.zakoulov.githubkotlintrends.ui.repos
 
+import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.SpinnerAdapter
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +17,7 @@ import ru.zakoulov.githubkotlintrends.App
 import ru.zakoulov.githubkotlintrends.R
 import ru.zakoulov.githubkotlintrends.data.DataResult
 import ru.zakoulov.githubkotlintrends.data.ReposList
+import ru.zakoulov.githubkotlintrends.data.ReposRepository
 import ru.zakoulov.githubkotlintrends.ui.main.MainViewModel
 import ru.zakoulov.githubkotlintrends.ui.main.ViewModelFactory
 
@@ -25,8 +29,10 @@ class ReposFragment : Fragment() {
     }
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewManager: LinearLayoutManager
-    private lateinit var viewAdapter: ReposViewAdapter
+    private lateinit var recyclerViewManager: LinearLayoutManager
+    private lateinit var recyclerViewAdapter: ReposViewAdapter
+    private lateinit var intervalsSpinner: Spinner
+    private lateinit var spinnerAdapter: SpinnerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,23 +40,40 @@ class ReposFragment : Fragment() {
     ): View {
         return inflater.inflate(R.layout.repos_fragment, container, false).apply {
             recyclerView = findViewById(R.id.recycler_view)
+            intervalsSpinner = findViewById(R.id.intervals_spinner)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewManager = LinearLayoutManager(this.context)
-        viewAdapter = ReposViewAdapter(ReposList(emptyList()))
+        recyclerViewManager = LinearLayoutManager(this.context)
+        recyclerViewAdapter = ReposViewAdapter(ReposList(emptyList()))
         recyclerView.apply {
-            layoutManager = viewManager
-            adapter = viewAdapter
+            layoutManager = recyclerViewManager
+            adapter = recyclerViewAdapter
         }
+
+        val periods = ReposRepository.Since.values().map {
+            getString(resources.getIdentifier(
+                it.value,
+                "string",
+                requireContext().packageName
+            ))
+        }
+        spinnerAdapter = ArrayAdapter(
+            this.requireContext(),
+            android.R.layout.simple_spinner_item,
+            periods
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        intervalsSpinner.adapter = spinnerAdapter
 
         viewModel.repos.observe(viewLifecycleOwner, Observer { reposDataResult ->
             when {
                 reposDataResult is DataResult.Success -> {
-                    viewAdapter.reposList = reposDataResult.data!!
+                    recyclerViewAdapter.reposList = reposDataResult.data!!
                 }
             }
         })
