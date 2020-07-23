@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.SpinnerAdapter
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -34,6 +31,7 @@ class ReposFragment : Fragment(), ReposCallbacks {
     private lateinit var recyclerViewAdapter: ReposViewAdapter
     private lateinit var intervalsSpinner: Spinner
     private lateinit var spinnerAdapter: SpinnerAdapter
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +40,7 @@ class ReposFragment : Fragment(), ReposCallbacks {
         return inflater.inflate(R.layout.repos_fragment, container, false).apply {
             recyclerView = findViewById(R.id.recycler_view)
             intervalsSpinner = findViewById(R.id.intervals_spinner)
+            progressBar = findViewById(R.id.progress_bar)
         }
     }
 
@@ -51,9 +50,13 @@ class ReposFragment : Fragment(), ReposCallbacks {
         setupSpinner()
 
         viewModel.repos.observe(viewLifecycleOwner, Observer { reposDataResult ->
-            when {
-                reposDataResult is DataResult.Success -> {
+            when (reposDataResult) {
+                is DataResult.Success -> {
                     recyclerViewAdapter.reposList = reposDataResult.data!!
+                    progressBar.visibility = View.GONE
+                }
+                is DataResult.Loading -> {
+                    progressBar.visibility = View.VISIBLE
                 }
             }
         })
