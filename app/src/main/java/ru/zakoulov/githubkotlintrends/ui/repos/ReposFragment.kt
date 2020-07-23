@@ -1,10 +1,10 @@
 package ru.zakoulov.githubkotlintrends.ui.repos
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.SpinnerAdapter
@@ -46,14 +46,28 @@ class ReposFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecycler()
+        setupSpinner()
 
+        viewModel.repos.observe(viewLifecycleOwner, Observer { reposDataResult ->
+            when {
+                reposDataResult is DataResult.Success -> {
+                    recyclerViewAdapter.reposList = reposDataResult.data!!
+                }
+            }
+        })
+    }
+
+    private fun setupRecycler() {
         recyclerViewManager = LinearLayoutManager(this.context)
         recyclerViewAdapter = ReposViewAdapter(ReposList(emptyList()))
         recyclerView.apply {
             layoutManager = recyclerViewManager
             adapter = recyclerViewAdapter
         }
+    }
 
+    private fun setupSpinner() {
         val periods = ReposRepository.Since.values().map {
             getString(resources.getIdentifier(
                 it.value,
@@ -68,15 +82,22 @@ class ReposFragment : Fragment() {
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        intervalsSpinner.adapter = spinnerAdapter
-
-        viewModel.repos.observe(viewLifecycleOwner, Observer { reposDataResult ->
-            when {
-                reposDataResult is DataResult.Success -> {
-                    recyclerViewAdapter.reposList = reposDataResult.data!!
+        intervalsSpinner.apply {
+            adapter = spinnerAdapter
+            setSelection(viewModel.selectedSince.ordinal)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.selectedSince = ReposRepository.Since.values()[position]
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             }
-        })
+        }
     }
 
     companion object {
