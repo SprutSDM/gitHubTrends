@@ -51,6 +51,13 @@ class ReposRepository(
     }
 
     enum class Language(val value: String) {
-        KOTLIN("kotlin")
+        KOTLIN("kotlin"),
+        JAVA("java"),
+        PYTHON("python"),
+        JAVASCRIPT("javascript"),
+        PHP("php"),
+        SCALA("scala"),
+        DART("dart"),
+        VUE("vue")
     }
 }
