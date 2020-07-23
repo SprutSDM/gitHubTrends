@@ -29,8 +29,10 @@ class ReposFragment : Fragment(), ReposCallbacks {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewManager: LinearLayoutManager
     private lateinit var recyclerViewAdapter: ReposViewAdapter
-    private lateinit var intervalsSpinner: Spinner
-    private lateinit var spinnerAdapter: SpinnerAdapter
+    private lateinit var intervalSpinner: Spinner
+    private lateinit var intervalSpinnerAdapter: SpinnerAdapter
+    private lateinit var languageSpinner: Spinner
+    private lateinit var languageSpinnerAdapter: SpinnerAdapter
     private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
@@ -39,7 +41,8 @@ class ReposFragment : Fragment(), ReposCallbacks {
     ): View {
         return inflater.inflate(R.layout.repos_fragment, container, false).apply {
             recyclerView = findViewById(R.id.recycler_view)
-            intervalsSpinner = findViewById(R.id.intervals_spinner)
+            intervalSpinner = findViewById(R.id.interval_spinner)
+            languageSpinner = findViewById(R.id.language_spinner)
             progressBar = findViewById(R.id.progress_bar)
         }
     }
@@ -47,7 +50,8 @@ class ReposFragment : Fragment(), ReposCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecycler()
-        setupSpinner()
+        setupSinceSpinner()
+        setupLanguageSpinner()
 
         viewModel.repos.observe(viewLifecycleOwner, Observer { reposDataResult ->
             when (reposDataResult) {
@@ -79,7 +83,7 @@ class ReposFragment : Fragment(), ReposCallbacks {
         }
     }
 
-    private fun setupSpinner() {
+    private fun setupSinceSpinner() {
         val periods = ReposRepository.Since.values().map {
             getString(resources.getIdentifier(
                 it.value,
@@ -87,15 +91,15 @@ class ReposFragment : Fragment(), ReposCallbacks {
                 requireContext().packageName
             ))
         }
-        spinnerAdapter = ArrayAdapter(
+        intervalSpinnerAdapter = ArrayAdapter(
             this.requireContext(),
             R.layout.selected_item_spinner,
             periods
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        intervalsSpinner.apply {
-            adapter = spinnerAdapter
+        intervalSpinner.apply {
+            adapter = intervalSpinnerAdapter
             setSelection(viewModel.currentSince.value?.ordinal ?: 0)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -105,6 +109,39 @@ class ReposFragment : Fragment(), ReposCallbacks {
                     id: Long
                 ) {
                     viewModel.currentSince.value = ReposRepository.Since.values()[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            }
+        }
+    }
+
+    private fun setupLanguageSpinner() {
+        val languages = ReposRepository.Language.values().map {
+            getString(resources.getIdentifier(
+                it.value,
+                "string",
+                requireContext().packageName
+            ))
+        }
+        languageSpinnerAdapter = ArrayAdapter(
+            this.requireContext(),
+            R.layout.selected_item_spinner,
+            languages
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        languageSpinner.apply {
+            adapter = languageSpinnerAdapter
+            setSelection(viewModel.currentLanguage.value?.ordinal ?: 0)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.currentLanguage.value = ReposRepository.Language.values()[position]
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) = Unit

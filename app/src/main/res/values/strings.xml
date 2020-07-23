@@ -3,4 +3,6 @@
     <string name="daily">Today</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
+
+    <string name="kotlin">Kotlin</string>
 </resources>
